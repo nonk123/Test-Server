@@ -36,6 +36,8 @@ public class ServerLauncher {
             server.join();
         } catch (Exception ex) {
             LOG.error("", ex);
+        } finally {
+            server.destroy();
         }
     }
 
