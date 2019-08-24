@@ -1,0 +1,10 @@
+# It's generally not a good idea to have the app pre-built inside of your repo.
+target/
+
+# Jetty stuff.
+start.d/
+
+# Eclipse language server-related stuff.
+.settings/
+.classpath
+.project
