@@ -1,25 +1,22 @@
 package net.srul.as205315.server.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@WebServlet("/")
 public class HomeServlet extends HttpServlet {
 
     private static final long serialVersionUID = 7084469917477033994L;
 
     private String pick(String[] array, Random random) {
-        synchronized (array) {
-            synchronized (random) {
-                final String result = array[random.nextInt(array.length)];
-                final String[] variants = result.split("\\|");
-                return variants[random.nextInt(variants.length)];
-            }
-        }
+        return array[random.nextInt(array.length)];
     }
 
 	@Override
@@ -53,7 +50,7 @@ public class HomeServlet extends HttpServlet {
             "beer", "vodka", "horse brain"
         };
 
-        // Inserted body parts.
+        // List of possible bodyparts that Woody can insert into Andy.
         final String[] bodyparts = new String[] {
             "head", "hand", "arm", "foot", "leg", "both hands", "both arms",
             "both feet", "both legs", "entire body up to the chest",
@@ -71,20 +68,18 @@ public class HomeServlet extends HttpServlet {
         } while (andy.equals(woody));
 
         // Cock and ass descriptions are random, too.
-        final String cockAdjectiveFirst = pick(cockAdjectives, random);
+        String cockAdjectiveFirst = pick(cockAdjectives, random);
 
         String cockAdjectiveSecond = "";
         do {
             cockAdjectiveSecond = pick(cockAdjectives, random);
         } while (cockAdjectiveFirst.equals(cockAdjectiveSecond));
 
-        final String assAdjectiveFirst = pick(cockAdjectives, random);
-        final String assAdjectiveSecond = pick(cockAdjectives, random);
+        cockAdjectiveFirst = pick(cockAdjectiveFirst.split("\\|"), random);
+        cockAdjectiveSecond = pick(cockAdjectiveSecond.split("\\|"), random);
 
-        // Bodypart to be inserted.
+        // Very important aspects of the story that have to randomized.
         final String bodypart = pick(bodyparts, random);
-
-        // Lube flavour.
         final String lubeFlavour = pick(lubeFlavours, random);
 
         // Here it comes.
@@ -101,17 +96,17 @@ public class HomeServlet extends HttpServlet {
         wgwBuilder.append("I'm alive and I want to be INSIDE OF YOU.\" ");
         wgwBuilder.append(andy).append(": \"Oh ").append(woody).append(" Chan! ");
         wgwBuilder.append("I always knew you were alive! I want to stuff you up ");
-        wgwBuilder.append("my ").append(assAdjectiveFirst).append(" ass!\" ");
+        wgwBuilder.append("my ").append(pick(cockAdjectives, random)).append(" ass!\" ");
         wgwBuilder.append(woody).append(" grabbed a bunch of flavored lube and ");
         wgwBuilder.append("rubbed it all over his ").append(bodypart).append(" ");
         wgwBuilder.append(woody).append(": \"Oh my! It's ").append(lubeFlavour);
         wgwBuilder.append(" flavored lube! ");
-        // A quick and hacky conversion of lube flavour to title case.
+        // A quick and hacky conversion of lube flavour to titlecase.
         wgwBuilder.append(Character.toUpperCase(lubeFlavour.toCharArray()[0]));
         wgwBuilder.append(lubeFlavour.substring(1, lubeFlavour.length()));
         wgwBuilder.append(" is my favourite! ").append(woody).append(" then stuffed ");
         wgwBuilder.append("his ").append(bodypart).append(" back and forth into ");
-        wgwBuilder.append(andy).append("'s ").append(assAdjectiveSecond);
+        wgwBuilder.append(andy).append("'s ").append(pick(cockAdjectives, random));
         wgwBuilder.append(" ass, continuously making a squishy wet noise. ");
         wgwBuilder.append("The other toys also became aroused and they all ");
         wgwBuilder.append("gathered around ").append(woody).append(" and ").append(andy);
@@ -136,12 +131,17 @@ public class HomeServlet extends HttpServlet {
 
         response.setContentType("text/html; charset=utf8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println(
-              "<!DOCTYPE html><html><body>\n"
-            + "<title>nonk's homepage (tm)</title>\n"
-            + "<h1>Here is your randomly generated WGW:</h1>\n"
-            + String.format("<p>%s</p>\n", wgwBuilder.toString())
-            + "</body></html>"
-        );
+
+        final PrintWriter p = response.getWriter();
+        p.println("<!DOCTYPE html><html><body>");
+        p.println("<title>nonk's homepage (tm)</title>");
+        p.println("<h1>Here is your randomly generated WGW:</h1>");
+        p.println(String.format("<p>%s</p>", wgwBuilder.toString()));
+        p.println("<h1>Also check out other parts of our website!</h1>");
+        p.println("<p>Like, for example:<ul>");
+        p.println("<li><a href=/games>Games</a>.</li>");
+        p.println("<li>And that's pretty much it.</li>");
+        p.println("</ul></p>");
+        p.println("</body></html>");
     }
 }

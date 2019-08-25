@@ -1,6 +1,9 @@
 # It's generally not a good idea to have the app pre-built inside of your repo.
 target/
 
+# These shouldn't be in the repo either.
+src/main/webapp/WEB-INF/resources/games/*
+
 # Jetty stuff.
 start.d/
 

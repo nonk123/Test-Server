@@ -6,11 +6,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.srul.as205315.server.servlets.HomeServlet;
 
 public class ServerLauncher {
 
@@ -24,8 +22,9 @@ public class ServerLauncher {
 
         server.setConnectors(new Connector[] { connector });
 
-        ServletContextHandler context = new ServletContextHandler();
-        context.addServlet(HomeServlet.class, "/");
+        WebAppContext context = new WebAppContext();
+        context.setServer(server);
+        context.setContextPath("/");
 
         HandlerCollection handlers = new HandlerCollection();
         handlers.setHandlers(new Handler[] { context, new DefaultHandler() });
